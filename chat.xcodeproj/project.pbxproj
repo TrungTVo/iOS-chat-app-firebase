@@ -14,6 +14,7 @@
 		2E83066320C1046A0073B06E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2E83066220C1046A0073B06E /* Assets.xcassets */; };
 		2E83066620C1046A0073B06E /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2E83066420C1046A0073B06E /* LaunchScreen.storyboard */; };
 		2E83067120C1046A0073B06E /* chatTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E83067020C1046A0073B06E /* chatTests.swift */; };
+		2E83067D20C105D80073B06E /* LoginController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E83067C20C105D80073B06E /* LoginController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -38,6 +39,7 @@
 		2E83066C20C1046A0073B06E /* chatTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = chatTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		2E83067020C1046A0073B06E /* chatTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = chatTests.swift; sourceTree = "<group>"; };
 		2E83067220C1046B0073B06E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		2E83067C20C105D80073B06E /* LoginController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -79,8 +81,8 @@
 		2E83065720C104690073B06E /* chat */ = {
 			isa = PBXGroup;
 			children = (
+				2E83067B20C105920073B06E /* Controller */,
 				2E83065820C104690073B06E /* AppDelegate.swift */,
-				2E83065A20C104690073B06E /* ViewController.swift */,
 				2E83065C20C104690073B06E /* Main.storyboard */,
 				2E83066220C1046A0073B06E /* Assets.xcassets */,
 				2E83066420C1046A0073B06E /* LaunchScreen.storyboard */,
@@ -97,6 +99,15 @@
 				2E83067220C1046B0073B06E /* Info.plist */,
 			);
 			path = chatTests;
+			sourceTree = "<group>";
+		};
+		2E83067B20C105920073B06E /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+				2E83065A20C104690073B06E /* ViewController.swift */,
+				2E83067C20C105D80073B06E /* LoginController.swift */,
+			);
+			path = Controller;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -201,6 +212,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				2E83065B20C104690073B06E /* ViewController.swift in Sources */,
+				2E83067D20C105D80073B06E /* LoginController.swift in Sources */,
 				2E83066120C104690073B06E /* chat.xcdatamodeld in Sources */,
 				2E83065920C104690073B06E /* AppDelegate.swift in Sources */,
 			);
