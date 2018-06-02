@@ -35,10 +35,44 @@ class LoginController: UIViewController {
         button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 16)
         
         // handle action
-        button.addTarget(self, action: #selector(handleRegister), for: UIControlEvents.touchUpInside)
+        button.addTarget(self, action: #selector(handleLoginRegister), for: UIControlEvents.touchUpInside)
         
         return button
     }()
+    
+    @objc func handleLoginRegister() {
+        if loginRegisterSegmentationControl.selectedSegmentIndex == 0 {
+            handleLogin()
+        } else {
+            handleRegister()
+        }
+    }
+    
+    @objc func handleLogin() {
+        // get string data from text fields
+        guard let email = emailTextField.text,
+            let password = passwordTextField.text
+            else {
+                print("Form is not valid!")
+                return
+        }
+        Auth.auth().signIn(withEmail: email, password: password) { (user, error) in
+            if error != nil {
+                let errcode = AuthErrorCode(rawValue: error!._code)
+                if errcode == AuthErrorCode.invalidEmail {
+                    print ("Invalid email!")
+                } else if errcode == AuthErrorCode.missingEmail {
+                    print ("This email is not existed!")
+                } else if errcode == AuthErrorCode.wrongPassword {
+                    print ("Wrong password!")
+                }
+                return
+            }
+            print("Successfully logged in!")
+            // fade log in view controller away after log-in/registering
+            self.dismiss(animated: true, completion: nil)
+        }
+    }
     
     @objc func handleRegister() {
         // get string data from text fields
@@ -75,6 +109,9 @@ class LoginController: UIViewController {
                     return
                 }
                 print("Save user successfully to Firebase database!")
+                
+                // fade log in view controller away after log-in/registering
+                self.dismiss(animated: true, completion: nil)
             })
         }
     }
