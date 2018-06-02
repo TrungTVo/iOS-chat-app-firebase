@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Firebase
 
 class LoginController: UIViewController {
     
@@ -32,8 +33,51 @@ class LoginController: UIViewController {
         button.translatesAutoresizingMaskIntoConstraints = false
         button.setTitleColor(UIColor.white, for: UIControlState.normal)
         button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 16)
+        
+        // handle action
+        button.addTarget(self, action: #selector(handleRegister), for: UIControlEvents.touchUpInside)
+        
         return button
     }()
+    
+    @objc func handleRegister() {
+        // get string data from text fields
+        guard let email = emailTextField.text,
+                let password = passwordTextField.text,
+                let name = nameTextField.text
+            else {
+                print("Form is not valid!")
+                return
+        }
+        // authenticate user
+        Auth.auth().createUser(withEmail: emailTextField.text!, password: passwordTextField.text!) {
+            (user, error) in
+            if error != nil {
+                let errcode = AuthErrorCode(rawValue: error!._code)
+                if (errcode == .emailAlreadyInUse) {
+                    print("This email is already used!")
+                } else if (errcode == AuthErrorCode.weakPassword) {
+                    print("This is weak password!")
+                }
+                return
+            }
+            print("Successfully authenticated user!")
+            
+            // save it to Firebase database
+            var ref: DatabaseReference!
+            ref = Database.database().reference(fromURL: "https://chat-app-50062.firebaseio.com/")
+            let usersReference = ref.child("users").child((user?.user.uid)!)
+            let values = ["name": name, "email": email]
+            usersReference.updateChildValues(values, withCompletionBlock: {
+                (err, ref) in
+                if err != nil {
+                    print (err)
+                    return
+                }
+                print("Save user successfully to Firebase database!")
+            })
+        }
+    }
 
     // logo image at the top
     let profileImageView: UIImageView = {
