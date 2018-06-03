@@ -71,6 +71,13 @@ class LoginController: UIViewController {
             print("Successfully logged in!")
             // fade log in view controller away after log-in/registering
             self.dismiss(animated: true, completion: nil)
+            
+            // display user name on top of navigation bar
+            Database.database().reference().child("users").child((Auth.auth().currentUser?.uid)!).observeSingleEvent(of: .value, with: { (snapshot) in
+                if let dictionary = snapshot.value as? [String: AnyObject] {
+                    self.navigationItem.title = dictionary["name"] as? String
+                }
+            }, withCancel: nil)
         }
     }
     
