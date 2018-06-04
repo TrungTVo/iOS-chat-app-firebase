@@ -7,17 +7,52 @@
 //
 
 import UIKit
+import Firebase
 
 class NewMessageController: UITableViewController {
-
+    let cellID = "cellID"
+    var users = [User]()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        // Uncomment the following line to preserve selection between presentations
-        // self.clearsSelectionOnViewWillAppear = false
-
-        // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-        // self.navigationItem.rightBarButtonItem = self.editButtonItem
+        self.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Cancel", style: .plain, target: self, action: #selector(handleCancel))
+        fetchUser()
     }
-
+    
+    func fetchUser() {
+        Database.database().reference().child("users").observe(.childAdded, andPreviousSiblingKeyWith: { (snapshot, error) in
+            if let dictionary = snapshot.value as? [String: AnyObject] {
+                let user = User()
+                user.name = dictionary["name"] as? String
+                user.email = dictionary["email"] as? String
+                self.users.append(user)
+                
+                // this will crash because of background thread, so lets use dispatch_async to fix
+                DispatchQueue.global(qos: .userInitiated).async {
+                    DispatchQueue.main.async {
+                        self.tableView.reloadData()
+                    }
+                }
+                
+                print(user.name, user.email)
+            }
+        }, withCancel: nil)
+    }
+    
+    @objc func handleCancel() {
+        self.dismiss(animated: true, completion: nil)
+    }
+    
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return self.users.count
+    }
+    
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = UITableViewCell(style: .subtitle, reuseIdentifier: cellID)
+        let user = self.users[indexPath.row]
+        cell.textLabel?.text = user.name
+        cell.detailTextLabel?.text = user.email
+        return cell
+    }
 }
