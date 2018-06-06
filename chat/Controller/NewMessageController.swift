@@ -29,6 +29,8 @@ class NewMessageController: UITableViewController {
                 let user = User()
                 user.name = dictionary["name"] as? String
                 user.email = dictionary["email"] as? String
+                user.profileImageUrl = dictionary["profileImageUrl"] as? String
+                //user.setValuesForKeys(dictionary)
                 self.users.append(user)
                 
                 // this will crash because of background thread, so lets use dispatch_async to fix

@@ -105,27 +105,53 @@ extension LoginController: UIImagePickerControllerDelegate, UINavigationControll
             print("Successfully authenticated user!")
             
             // save it to Firebase database
-            var ref: DatabaseReference!
-            ref = Database.database().reference(fromURL: "https://chat-app-50062.firebaseio.com/")
-            let usersReference = ref.child("users").child((user?.user.uid)!)
-            let values = ["name": name, "email": email]
-            usersReference.updateChildValues(values, withCompletionBlock: {
-                (err, ref) in
-                if err != nil {
-                    print (err)
+            let img_name = NSUUID().uuidString
+            let storageRef = Storage.storage().reference(withPath: "profile_images/\(img_name).jpg")
+            let uploadData = UIImagePNGRepresentation(self.profileImageView.image!)
+            let upload_metadata = StorageMetadata()
+            
+            storageRef.putData(uploadData!, metadata: upload_metadata, completion: { (metadata, e) in
+                if e != nil {
+                    print ("Error: \(String(describing: e?.localizedDescription))")
                     return
                 }
-                print("Save user successfully to Firebase database!")
+                print ("Upload complete! here's metadata: \(String(describing: metadata))")
                 
-                // fade log in view controller away after log-in/registering
-                self.dismiss(animated: true, completion: nil)
-                
-                Database.database().reference().child("users").child((Auth.auth().currentUser?.uid)!).observeSingleEvent(of: .value, with: { (snapshot) in
-                    if let dictionary = snapshot.value as? [String: AnyObject] {
-                        self.navigationItem.title = dictionary["name"] as? String
+                // get profile image URL
+                storageRef.downloadURL(completion: { (url, err) in
+                    guard let profileImageUrl = url else {
+                        print (err!)
+                        return
                     }
-                }, withCancel: nil)
+                    // create values dictionary to save into database
+                    let values = ["name": name, "email": email, "profileImageUrl": profileImageUrl.absoluteString]
+                    self.registerUserIntoDatabase(uid: (user?.user.uid)!, values: values )
+                })
             })
         }
+    }
+    
+    func registerUserIntoDatabase (uid: String, values: [String: Any]) {
+        var ref: DatabaseReference!
+        ref = Database.database().reference(fromURL: "https://chat-app-50062.firebaseio.com/")
+        let usersReference = ref.child("users").child(uid)
+        
+        usersReference.setValue(values) { (error, ref) in
+            if error != nil {
+                print (error?.localizedDescription as Any)
+                return
+            }
+            print("Save user successfully to Firebase database!")
+            
+            // fade log in view controller away after log-in/registering
+            self.dismiss(animated: true, completion: nil)
+            
+            Database.database().reference().child("users").child((Auth.auth().currentUser?.uid)!).observeSingleEvent(of: .value, with: { (snapshot) in
+                if let dictionary = snapshot.value as? [String: AnyObject] {
+                    self.navigationItem.title = dictionary["name"] as? String
+                }
+            }, withCancel: nil)
+        }
+        
     }
 }

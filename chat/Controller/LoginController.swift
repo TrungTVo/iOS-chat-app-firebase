@@ -43,7 +43,7 @@ class LoginController: UIViewController {
     // logo image at the top
     lazy var profileImageView: UIImageView = {
         let imageView = UIImageView()
-        imageView.image = UIImage(named: "telegram-app")
+        imageView.image = UIImage(named: "user-icon")
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.contentMode = UIViewContentMode.scaleAspectFill
         
