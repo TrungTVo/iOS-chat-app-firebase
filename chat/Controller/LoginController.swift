@@ -10,6 +10,7 @@ import UIKit
 import Firebase
 
 class LoginController: UIViewController {
+    var messageController : MessagesController?
     
     // global variables
     var nameTextField : UITextField = UITextField()
@@ -45,6 +46,8 @@ class LoginController: UIViewController {
         let imageView = UIImageView()
         imageView.image = UIImage(named: "user-icon")
         imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.clipsToBounds = true
+        imageView.layer.cornerRadius = imageView.frame.size.width/2
         imageView.contentMode = UIViewContentMode.scaleAspectFill
         
         imageView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleSelectProfileImageView)))

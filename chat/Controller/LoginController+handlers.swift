@@ -73,11 +73,8 @@ extension LoginController: UIImagePickerControllerDelegate, UINavigationControll
             // fade log in view controller away after log-in/registering
             self.dismiss(animated: true, completion: nil)
             
-            Database.database().reference().child("users").child((Auth.auth().currentUser?.uid)!).observeSingleEvent(of: .value, with: { (snapshot) in
-                if let dictionary = snapshot.value as? [String: AnyObject] {
-                    self.navigationItem.title = dictionary["name"] as? String
-                }
-            }, withCancel: nil)
+            // put user name onto nav bar
+            self.messageController?.fetchUserAndSetupNavbarTitle()
         }
     }
     
@@ -146,11 +143,8 @@ extension LoginController: UIImagePickerControllerDelegate, UINavigationControll
             // fade log in view controller away after log-in/registering
             self.dismiss(animated: true, completion: nil)
             
-            Database.database().reference().child("users").child((Auth.auth().currentUser?.uid)!).observeSingleEvent(of: .value, with: { (snapshot) in
-                if let dictionary = snapshot.value as? [String: AnyObject] {
-                    self.navigationItem.title = dictionary["name"] as? String
-                }
-            }, withCancel: nil)
+            // put user name onto nav bar
+            self.messageController?.fetchUserAndSetupNavbarTitle()
         }
         
     }

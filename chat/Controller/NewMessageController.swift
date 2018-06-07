@@ -57,6 +57,7 @@ class NewMessageController: UITableViewController {
         let user = self.users[indexPath.row]
         cell.textLabel?.text = user.name
         cell.detailTextLabel?.text = user.email
+        cell.imageView?.image = UIImage(named: "telegram-app")
         return cell
     }
 }
