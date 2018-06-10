@@ -34,7 +34,7 @@ class NewMessageController: UITableViewController {
                 self.users.append(user)
                 
                 // this will crash because of background thread, so lets use dispatch_async to fix
-                DispatchQueue.global(qos: .userInitiated).async {
+                DispatchQueue.global(qos: .userInteractive).async {
                     DispatchQueue.main.async {
                         self.tableView.reloadData()
                     }
@@ -50,21 +50,61 @@ class NewMessageController: UITableViewController {
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return self.users.count
     }
-    
+    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 50
+    }
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         //let cell = UITableViewCell(style: .subtitle, reuseIdentifier: cellID)
-        let cell = tableView.dequeueReusableCell(withIdentifier: cellID, for: indexPath)
+        let cell = tableView.dequeueReusableCell(withIdentifier: cellID, for: indexPath) as! UserCell
         let user = self.users[indexPath.row]
         cell.textLabel?.text = user.name
         cell.detailTextLabel?.text = user.email
-        cell.imageView?.image = UIImage(named: "telegram-app")
+        
+        if let profileImageUrl = user.profileImageUrl {
+            let url = URL(string: profileImageUrl)
+            URLSession.shared.dataTask(with: url!) { (data, response, error) in
+                if error != nil {
+                    print (error!)
+                    return
+                }
+                DispatchQueue.global(qos: .userInteractive).async {
+                    DispatchQueue.main.async {
+                        cell.profileImageView.image = UIImage(data: data!)
+                    }
+                }
+            }.resume()
+            
+        }
         return cell
     }
 }
 
 class UserCell: UITableViewCell {
+    
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        textLabel?.frame = CGRect(x: 56, y: (textLabel?.frame.origin.y)!, width: (textLabel?.frame.width)!, height: (textLabel?.frame.height)!)
+        detailTextLabel?.frame = CGRect(x: 56, y: (detailTextLabel?.frame.origin.y)!, width: (detailTextLabel?.frame.width)!, height: (detailTextLabel?.frame.height)!)
+    }
+    
+    let profileImageView: UIImageView = {
+        let imageView = UIImageView(image: UIImage(named: "user-icon"))
+        imageView.contentMode = .scaleAspectFill
+        imageView.layer.cornerRadius = 20
+        imageView.clipsToBounds = true
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        return imageView
+    }()
+    
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: .subtitle, reuseIdentifier: reuseIdentifier)
+        self.addSubview(profileImageView)
+        
+        // constraint
+        profileImageView.leftAnchor.constraint(equalTo: self.leftAnchor, constant: 8).isActive = true
+        profileImageView.centerYAnchor.constraint(equalTo: self.centerYAnchor).isActive = true
+        profileImageView.widthAnchor.constraint(equalToConstant: 40).isActive = true
+        profileImageView.heightAnchor.constraint(equalToConstant: 40).isActive = true
     }
     
     required init?(coder aDecoder: NSCoder) {

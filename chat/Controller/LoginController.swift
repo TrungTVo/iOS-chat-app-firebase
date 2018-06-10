@@ -46,8 +46,9 @@ class LoginController: UIViewController {
         let imageView = UIImageView()
         imageView.image = UIImage(named: "user-icon")
         imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.layer.borderWidth = 2
+        imageView.layer.borderColor = UIColor.white.cgColor
         imageView.clipsToBounds = true
-        imageView.layer.cornerRadius = imageView.frame.size.width/2
         imageView.contentMode = UIViewContentMode.scaleAspectFill
         
         imageView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleSelectProfileImageView)))
