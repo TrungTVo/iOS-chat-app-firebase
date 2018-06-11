@@ -10,6 +10,7 @@
 		2E2CA98320C3785A00B5CCF4 /* NewMessageController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E2CA98220C3785A00B5CCF4 /* NewMessageController.swift */; };
 		2E2CA98620C4ACC800B5CCF4 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E2CA98520C4ACC800B5CCF4 /* User.swift */; };
 		2E2CA98820C5FF6E00B5CCF4 /* LoginController+handlers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E2CA98720C5FF6E00B5CCF4 /* LoginController+handlers.swift */; };
+		2E3AD48A20CEFEFD003E4877 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E3AD48920CEFEFD003E4877 /* Extensions.swift */; };
 		2E83065920C104690073B06E /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E83065820C104690073B06E /* AppDelegate.swift */; };
 		2E83065B20C104690073B06E /* MessagesController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E83065A20C104690073B06E /* MessagesController.swift */; };
 		2E83065E20C104690073B06E /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2E83065C20C104690073B06E /* Main.storyboard */; };
@@ -39,6 +40,7 @@
 		2E2CA98220C3785A00B5CCF4 /* NewMessageController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewMessageController.swift; sourceTree = "<group>"; };
 		2E2CA98520C4ACC800B5CCF4 /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		2E2CA98720C5FF6E00B5CCF4 /* LoginController+handlers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "LoginController+handlers.swift"; sourceTree = "<group>"; };
+		2E3AD48920CEFEFD003E4877 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		2E83065520C104690073B06E /* chat.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = chat.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2E83065820C104690073B06E /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		2E83065A20C104690073B06E /* MessagesController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessagesController.swift; sourceTree = "<group>"; };
@@ -86,6 +88,14 @@
 			path = Model;
 			sourceTree = "<group>";
 		};
+		2E3AD48820CEFEE5003E4877 /* Helpers */ = {
+			isa = PBXGroup;
+			children = (
+				2E3AD48920CEFEFD003E4877 /* Extensions.swift */,
+			);
+			path = Helpers;
+			sourceTree = "<group>";
+		};
 		2E83064C20C104690073B06E = {
 			isa = PBXGroup;
 			children = (
@@ -109,6 +119,7 @@
 		2E83065720C104690073B06E /* chat */ = {
 			isa = PBXGroup;
 			children = (
+				2E3AD48820CEFEE5003E4877 /* Helpers */,
 				2E2CA98420C4AC9F00B5CCF4 /* Model */,
 				2E83067B20C105920073B06E /* Controller */,
 				2E83065820C104690073B06E /* AppDelegate.swift */,
@@ -333,6 +344,7 @@
 				2E83065B20C104690073B06E /* MessagesController.swift in Sources */,
 				2E2CA98320C3785A00B5CCF4 /* NewMessageController.swift in Sources */,
 				2E2CA98620C4ACC800B5CCF4 /* User.swift in Sources */,
+				2E3AD48A20CEFEFD003E4877 /* Extensions.swift in Sources */,
 				2E83067D20C105D80073B06E /* LoginController.swift in Sources */,
 				2E2CA98820C5FF6E00B5CCF4 /* LoginController+handlers.swift in Sources */,
 				2E83066120C104690073B06E /* chat.xcdatamodeld in Sources */,
