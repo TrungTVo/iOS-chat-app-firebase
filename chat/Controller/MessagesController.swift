@@ -69,7 +69,7 @@ class MessagesController: UITableViewController {
         let nameLabel = UILabel()
         nameLabel.translatesAutoresizingMaskIntoConstraints = false
         nameLabel.text = user.name
-        nameLabel.font = UIFont.boldSystemFont(ofSize: 13)
+        nameLabel.font = UIFont.systemFont(ofSize: 13, weight: .semibold)
         
         // container
         let container = UIView()
@@ -95,7 +95,20 @@ class MessagesController: UITableViewController {
         nameLabel.widthAnchor.constraint(equalTo: container.widthAnchor).isActive = true
         
         self.navigationItem.titleView = titleView
-        
+        /*
+        nameLabel.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(showChatController)))
+        profileImageView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(showChatController)))
+        titleView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(showChatController)))
+        container.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(showChatController)))
+        */
+    }
+    
+    @objc func showChatController() {
+        /*
+        let chatController = ChatLogController()
+        navigationController?.pushViewController(chatController, animated: true)
+        */
+        print(123)
     }
     
     @objc func handleLogout() {
