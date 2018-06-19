@@ -111,10 +111,10 @@ class LoginController: UIViewController {
         self.view.backgroundColor = UIColor(r: 61, g: 91, b: 151)
         
         // add subview to main view
-        self.view.addSubview(profileImageView)
-        self.view.addSubview(loginRegisterSegmentationControl)
-        self.view.addSubview(inputsContainerView)
-        self.view.addSubview(loginRegisterButton)
+        view.addSubview(profileImageView)
+        view.addSubview(loginRegisterSegmentationControl)
+        view.addSubview(inputsContainerView)
+        view.addSubview(loginRegisterButton)
         
         // set up input container view
         setupImageProfileView()
@@ -124,13 +124,13 @@ class LoginController: UIViewController {
     }
     
     func setupImageProfileView() {
-        profileImageView.centerXAnchor.constraint(equalTo: self.view.centerXAnchor).isActive = true
+        profileImageView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         profileImageView.bottomAnchor.constraint(equalTo: loginRegisterSegmentationControl.topAnchor, constant: -12).isActive = true
-        profileImageView.widthAnchor.constraint(equalToConstant: 150).isActive = true
-        profileImageView.heightAnchor.constraint(equalToConstant: 150).isActive = true
+        profileImageView.widthAnchor.constraint(equalToConstant: 0.6*view.frame.height/3).isActive = true
+        profileImageView.heightAnchor.constraint(equalToConstant: 0.6*view.frame.height/3).isActive = true
     }
     func setupLoginSegmentedControl() {
-        loginRegisterSegmentationControl.centerXAnchor.constraint(equalTo: self.view.centerXAnchor).isActive = true
+        loginRegisterSegmentationControl.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         loginRegisterSegmentationControl.bottomAnchor.constraint(equalTo: inputsContainerView.topAnchor, constant: -12).isActive = true
         loginRegisterSegmentationControl.widthAnchor.constraint(equalTo: inputsContainerView.widthAnchor, multiplier: 1).isActive = true
         loginRegisterSegmentationControl.heightAnchor.constraint(equalToConstant: 36).isActive = true
@@ -142,9 +142,9 @@ class LoginController: UIViewController {
     var passwordTextFieldHeightAnchor: NSLayoutConstraint?
     
     func setupInputsContainerView() {
-        inputsContainerView.centerXAnchor.constraint(equalTo: self.view.centerXAnchor).isActive = true
-        inputsContainerView.centerYAnchor.constraint(equalTo: self.view.centerYAnchor).isActive = true
-        inputsContainerView.widthAnchor.constraint(equalTo: self.view.widthAnchor, constant: -24).isActive = true
+        inputsContainerView.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor).isActive = true
+        inputsContainerView.centerYAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerYAnchor).isActive = true
+        inputsContainerView.widthAnchor.constraint(equalTo: view.safeAreaLayoutGuide.widthAnchor, constant: -24).isActive = true
         inputsContainerViewHeightAnchor = inputsContainerView.heightAnchor.constraint(equalToConstant: 150)
         inputsContainerViewHeightAnchor?.isActive = true
         
@@ -196,9 +196,9 @@ class LoginController: UIViewController {
         separator.heightAnchor.constraint(equalToConstant: 1).isActive = true
     }
     func setupLoginRegisterButton() {
-        loginRegisterButton.centerXAnchor.constraint(equalTo: self.view.centerXAnchor).isActive = true
+        loginRegisterButton.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor).isActive = true
         loginRegisterButton.topAnchor.constraint(equalTo: inputsContainerView.bottomAnchor, constant: 12).isActive = true
-        loginRegisterButton.widthAnchor.constraint(equalTo: self.view.widthAnchor, constant: -24).isActive = true
+        loginRegisterButton.widthAnchor.constraint(equalTo: view.safeAreaLayoutGuide.widthAnchor, constant: -24).isActive = true
         loginRegisterButton.heightAnchor.constraint(equalToConstant: 50).isActive = true
     }
     
