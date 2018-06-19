@@ -9,7 +9,7 @@
 import UIKit
 import Firebase
 
-class MessagesController: UITableViewController {
+class MessagesController: UITableViewController, UIGestureRecognizerDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -50,10 +50,11 @@ class MessagesController: UITableViewController {
     }
     
     func setupNavBarWithUser(user: User) {
+        
         // profile image view
         let profileImageView = UIImageView()
         profileImageView.contentMode = .scaleAspectFill
-        profileImageView.layer.cornerRadius = 16
+        profileImageView.layer.cornerRadius = 12.5
         profileImageView.clipsToBounds = true
         profileImageView.translatesAutoresizingMaskIntoConstraints = false
         if user.profileImageUrl != nil {
@@ -64,7 +65,7 @@ class MessagesController: UITableViewController {
         let nameLabel = UILabel()
         nameLabel.translatesAutoresizingMaskIntoConstraints = false
         nameLabel.text = user.name
-        nameLabel.font = UIFont.systemFont(ofSize: 13, weight: .semibold)
+        nameLabel.font = UIFont.systemFont(ofSize: 13, weight: .regular)
         
         // container
         let container = UIView()
@@ -72,25 +73,28 @@ class MessagesController: UITableViewController {
         container.addSubview(profileImageView)
         container.addSubview(nameLabel)
         
-        container.heightAnchor.constraint(equalToConstant: 80).isActive = true
+        container.heightAnchor.constraint(equalToConstant: 50).isActive = true
         
         profileImageView.centerXAnchor.constraint(equalTo: container.centerXAnchor).isActive = true
-        profileImageView.topAnchor.constraint(equalTo: container.topAnchor, constant: -7).isActive = true
-        profileImageView.heightAnchor.constraint(equalToConstant: 32).isActive = true
-        profileImageView.widthAnchor.constraint(equalToConstant: 32).isActive = true
+        profileImageView.topAnchor.constraint(equalTo: container.topAnchor).isActive = true
+        profileImageView.heightAnchor.constraint(equalToConstant: 25).isActive = true
+        profileImageView.widthAnchor.constraint(equalToConstant: 25).isActive = true
         
         nameLabel.centerXAnchor.constraint(equalTo: container.centerXAnchor).isActive = true
-        nameLabel.bottomAnchor.constraint(equalTo: container.bottomAnchor, constant: 10).isActive = true
-        nameLabel.heightAnchor.constraint(equalToConstant: 40).isActive = true
+        nameLabel.bottomAnchor.constraint(equalTo: container.bottomAnchor, constant: 0).isActive = true
+        nameLabel.heightAnchor.constraint(equalToConstant: 20).isActive = true
         nameLabel.widthAnchor.constraint(equalTo: container.widthAnchor).isActive = true
         
         self.navigationItem.titleView = container
         
-        container.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(showChatController)))
+        let gestureTap = UITapGestureRecognizer(target: self, action: #selector(showChatController))
+        container.addGestureRecognizer(gestureTap)
         container.isUserInteractionEnabled = true
+        
     }
     
     @objc func showChatController() {
+        print(123)
         let chatController = ChatLogController()
         navigationController?.pushViewController(chatController, animated: true)
     }
