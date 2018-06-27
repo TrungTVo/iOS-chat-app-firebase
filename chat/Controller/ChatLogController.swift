@@ -10,10 +10,14 @@ import UIKit
 import Firebase
 
 class ChatLogController: UICollectionViewController, UITextFieldDelegate {
-
+    var user: User? {
+        didSet {
+            navigationItem.title = user?.name
+        }
+    }
     override func viewDidLoad() {
         super.viewDidLoad()
-        navigationItem.title = "Chat Log Controller"
+        
         collectionView?.backgroundColor = UIColor.white
         setupInputComponents()
     }
@@ -68,9 +72,9 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate {
         separator.heightAnchor.constraint(equalToConstant: 1).isActive = true
         
         // ios 9 constraints
-        containerView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
-        containerView.leftAnchor.constraint(equalTo: view.leftAnchor).isActive = true
-        containerView.widthAnchor.constraint(equalTo: view.widthAnchor).isActive = true
+        containerView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor).isActive = true
+        containerView.leftAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leftAnchor).isActive = true
+        containerView.widthAnchor.constraint(equalTo: view.safeAreaLayoutGuide.widthAnchor).isActive = true
         containerView.heightAnchor.constraint(equalToConstant: 50).isActive = true
         
         // adding send button

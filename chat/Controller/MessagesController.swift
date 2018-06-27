@@ -24,6 +24,7 @@ class MessagesController: UITableViewController, UIGestureRecognizerDelegate {
     
     @objc func handleNewMessage() {
         let newMessageController = NewMessageController()
+        newMessageController.messagesController = self
         let navController = UINavigationController(rootViewController: newMessageController)
         present(navController, animated: true, completion: nil)
     }
@@ -87,14 +88,11 @@ class MessagesController: UITableViewController, UIGestureRecognizerDelegate {
         
         self.navigationItem.titleView = container
         
-        let gestureTap = UITapGestureRecognizer(target: self, action: #selector(showChatController))
-        container.addGestureRecognizer(gestureTap)
-        container.isUserInteractionEnabled = true
-        
     }
     
-    @objc func showChatController() {
+    @objc func showChatController(user: User) {
         let chatController = ChatLogController(collectionViewLayout: UICollectionViewFlowLayout())
+        chatController.user = user
         navigationController?.pushViewController(chatController, animated: true)
     }
     
