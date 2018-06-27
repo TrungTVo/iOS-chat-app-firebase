@@ -7,8 +7,9 @@
 //
 
 import UIKit
+import Firebase
 
-class ChatLogController: UICollectionViewController {
+class ChatLogController: UICollectionViewController, UITextFieldDelegate {
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -25,9 +26,10 @@ class ChatLogController: UICollectionViewController {
         return button
     }()
     
-    let inputTextField: UITextField = {
+    lazy var inputTextField: UITextField = {
         let textfield = UITextField()
         textfield.placeholder = "Enter message"
+        textfield.delegate = self
         textfield.translatesAutoresizingMaskIntoConstraints = false
         return textfield
     }()
@@ -40,7 +42,17 @@ class ChatLogController: UICollectionViewController {
     }()
     
     @objc func handleSend() {
-        print("Send test!!!")
+        // save text message into firebase database
+        let mess_ref = Database.database().reference(fromURL: "https://chat-app-50062.firebaseio.com/").child("messages")
+        let childmess_ref = mess_ref.childByAutoId()
+        let value = ["test": inputTextField.text]
+        childmess_ref.setValue(value)
+        inputTextField.text = ""
+    }
+    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        handleSend()
+        return true
     }
     
     func setupInputComponents() {
