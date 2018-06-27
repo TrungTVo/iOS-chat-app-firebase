@@ -49,8 +49,14 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate {
         // save text message into firebase database
         let mess_ref = Database.database().reference(fromURL: "https://chat-app-50062.firebaseio.com/").child("messages")
         let childmess_ref = mess_ref.childByAutoId()
-        let value = ["test": inputTextField.text]
+        
+        let toId = user?.id
+        let fromId = Auth.auth().currentUser?.uid
+        // dictionary to store into database
+        let value = ["test": inputTextField.text, "toId": toId, "fromId": fromId]
         childmess_ref.setValue(value)
+        
+        // clear input textfield
         inputTextField.text = ""
     }
     

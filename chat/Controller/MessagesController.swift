@@ -45,6 +45,7 @@ class MessagesController: UITableViewController, UIGestureRecognizerDelegate {
                 user.name = dictionary["name"] as? String
                 user.email = dictionary["name"] as? String
                 user.profileImageUrl = dictionary["profileImageUrl"] as? String
+                user.id = snapshot.key
                 self.setupNavBarWithUser(user: user)
             }
         }, withCancel: nil)
