@@ -53,7 +53,7 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate {
         let toId = user?.id
         let fromId = Auth.auth().currentUser?.uid
         // dictionary to store into database
-        let value = ["test": inputTextField.text, "toId": toId, "fromId": fromId]
+        let value = ["text": inputTextField.text, "toId": toId, "fromId": fromId]
         childmess_ref.setValue(value)
         
         // clear input textfield
