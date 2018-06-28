@@ -65,11 +65,21 @@ class MessagesController: UITableViewController, UIGestureRecognizerDelegate {
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let user = self.users[indexPath.row]
-        
-        self.dismiss(animated: true) {
-            self.messagesController?.showChatController(user: user)
+        let message = self.messages[indexPath.row]
+        guard let toId = message.chatPartnerId() else {
+            return
         }
+        
+        Database.database().reference().child("users").child(toId).observeSingleEvent(of: .value, with: { (snapshot) in
+            if let dictionary = snapshot.value as? [String : AnyObject] {
+                let user = User()
+                user.id = toId
+                user.name = dictionary["name"] as? String
+                user.email = dictionary["email"] as? String
+                user.profileImageUrl = dictionary["profileImageUrl"] as? String
+                self.showChatController(user: user)
+            }
+        })
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
