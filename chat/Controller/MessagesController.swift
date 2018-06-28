@@ -12,6 +12,7 @@ import Firebase
 class MessagesController: UITableViewController, UIGestureRecognizerDelegate {
     
     var messages = [Message]()
+    var messagesDictionary = [String : Message]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -20,7 +21,7 @@ class MessagesController: UITableViewController, UIGestureRecognizerDelegate {
         let image = UIImage(named: "write-icon")
         
         navigationItem.rightBarButtonItem = UIBarButtonItem(image: image, style: .plain, target: self, action: #selector(handleNewMessage))
-        tableView.register(FriendCell.self, forCellReuseIdentifier: "cellId")
+        tableView.register(UserCell.self, forCellReuseIdentifier: "cellId")
         
         checkIfUserLoggedIn()
         observeMessages()
@@ -33,7 +34,17 @@ class MessagesController: UITableViewController, UIGestureRecognizerDelegate {
                 message.text = dictionary["text"] as? String
                 message.fromId = dictionary["fromId"] as? String
                 message.toId = dictionary["toId"] as? String
-                self.messages.append(message)
+                message.timestamp = dictionary["timestamp"] as? NSNumber
+                //self.messages.append(message)
+                if let toId = message.toId {
+                    if Auth.auth().currentUser?.uid == message.fromId {
+                        self.messagesDictionary[toId] = message
+                        self.messages = Array(self.messagesDictionary.values)
+                        self.messages.sort(by: { (message1, message2) -> Bool in
+                            return (message1.timestamp?.intValue)! > (message2.timestamp?.intValue)!
+                        })
+                    }
+                }
                 
                 // reload table
                 DispatchQueue.global(qos: .userInteractive).async {
@@ -49,11 +60,22 @@ class MessagesController: UITableViewController, UIGestureRecognizerDelegate {
         return messages.count
     }
     
+    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 64
+    }
+    
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let user = self.users[indexPath.row]
+        
+        self.dismiss(animated: true) {
+            self.messagesController?.showChatController(user: user)
+        }
+    }
+    
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "cellId", for: indexPath)
+        let cell = tableView.dequeueReusableCell(withIdentifier: "cellId", for: indexPath) as! UserCell
         let message = messages[indexPath.row]
-        cell.textLabel?.text = message.toId
-        cell.detailTextLabel?.text = message.text
+        cell.message = message
         return cell
     }
     
@@ -142,17 +164,9 @@ class MessagesController: UITableViewController, UIGestureRecognizerDelegate {
         
         let loginController = LoginController()
         loginController.messageController = self
+        loginController.messageController?.messages.removeAll()
+        loginController.messageController?.messagesDictionary.removeAll()
         present(loginController, animated: true, completion: nil)
     }
     
-}
-
-class FriendCell: UITableViewCell {
-    override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
-        super.init(style: .subtitle, reuseIdentifier: "cellId")
-    }
-    
-    required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
 }

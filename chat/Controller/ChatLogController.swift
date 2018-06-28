@@ -50,10 +50,14 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate {
         let mess_ref = Database.database().reference(fromURL: "https://chat-app-50062.firebaseio.com/").child("messages")
         let childmess_ref = mess_ref.childByAutoId()
         
+        // IDs of sender and recipient
         let toId = user?.id
         let fromId = Auth.auth().currentUser?.uid
+        // timestamp for message
+        let timestamp: NSNumber = NSDate().timeIntervalSince1970 as NSNumber
+        
         // dictionary to store into database
-        let value = ["text": inputTextField.text, "toId": toId, "fromId": fromId]
+        let value = ["text": inputTextField.text!, "toId": toId!, "fromId": fromId!, "timestamp": timestamp] as [String : Any]
         childmess_ref.setValue(value)
         
         // clear input textfield

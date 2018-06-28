@@ -18,7 +18,7 @@ class NewMessageController: UITableViewController {
         super.viewDidLoad()
         
         self.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Cancel", style: .plain, target: self, action: #selector(handleCancel))
-        
+        self.navigationItem.title = "Friends list"
         tableView.register(UserCell.self, forCellReuseIdentifier: cellID)
         
         fetchUser()
@@ -74,39 +74,6 @@ class NewMessageController: UITableViewController {
         self.dismiss(animated: true) {
             self.messagesController?.showChatController(user: user)
         }
-    }
-}
-
-class UserCell: UITableViewCell {
-    
-    override func layoutSubviews() {
-        super.layoutSubviews()
-        textLabel?.frame = CGRect(x: 66, y: (textLabel?.frame.origin.y)!, width: (textLabel?.frame.width)!, height: (textLabel?.frame.height)!)
-        detailTextLabel?.frame = CGRect(x: 66, y: (detailTextLabel?.frame.origin.y)!, width: (detailTextLabel?.frame.width)!, height: (detailTextLabel?.frame.height)!)
-    }
-    
-    let profileImageView: UIImageView = {
-        let imageView = UIImageView(image: UIImage(named: "user-icon"))
-        imageView.contentMode = .scaleAspectFill
-        imageView.layer.cornerRadius = 24
-        imageView.clipsToBounds = true
-        imageView.translatesAutoresizingMaskIntoConstraints = false
-        return imageView
-    }()
-    
-    override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
-        super.init(style: .subtitle, reuseIdentifier: reuseIdentifier)
-        self.addSubview(profileImageView)
-        
-        // constraint
-        profileImageView.leftAnchor.constraint(equalTo: self.leftAnchor, constant: 9).isActive = true
-        profileImageView.centerYAnchor.constraint(equalTo: self.centerYAnchor).isActive = true
-        profileImageView.widthAnchor.constraint(equalToConstant: 48).isActive = true
-        profileImageView.heightAnchor.constraint(equalToConstant: 48).isActive = true
-    }
-    
-    required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
     }
 }
 
