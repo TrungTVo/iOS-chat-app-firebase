@@ -24,36 +24,41 @@ class MessagesController: UITableViewController, UIGestureRecognizerDelegate {
         tableView.register(UserCell.self, forCellReuseIdentifier: "cellId")
         
         checkIfUserLoggedIn()
-        observeMessages()
+        observeUserMessages()
     }
     
-    func observeMessages() {
-        let ref = Database.database().reference().child("messages").observe(.childAdded, with: { (snapshot) in
-            if let dictionary = snapshot.value as? [String: AnyObject] {
-                let message = Message()
-                message.text = dictionary["text"] as? String
-                message.fromId = dictionary["fromId"] as? String
-                message.toId = dictionary["toId"] as? String
-                message.timestamp = dictionary["timestamp"] as? NSNumber
-                //self.messages.append(message)
-                if let toId = message.toId {
-                    if Auth.auth().currentUser?.uid == message.fromId {
-                        self.messagesDictionary[toId] = message
-                        self.messages = Array(self.messagesDictionary.values)
-                        self.messages.sort(by: { (message1, message2) -> Bool in
-                            return (message1.timestamp?.intValue)! > (message2.timestamp?.intValue)!
-                        })
+    func observeUserMessages() {
+        if let currentUserId = Auth.auth().currentUser?.uid {
+            let userMessagesRef = Database.database().reference().child("user-messages")
+            userMessagesRef.child(currentUserId).observe(.childAdded, with: { (snapshot) in
+                let messageId = snapshot.key
+                let messageRef = Database.database().reference().child("messages")
+                messageRef.child(messageId).observe(.value, with: { (snap) in
+                    if let dictionary = snap.value as? [String: AnyObject] {
+                        let message = Message()
+                        message.text = dictionary["text"] as? String
+                        message.fromId = dictionary["fromId"] as? String
+                        message.toId = dictionary["toId"] as? String
+                        message.timestamp = dictionary["timestamp"] as? NSNumber
+                        
+                        if let toId = message.chatPartnerId() {
+                            self.messagesDictionary[toId] = message
+                            self.messages = Array(self.messagesDictionary.values)
+                            self.messages.sort(by: { (message1, message2) -> Bool in
+                                return (message1.timestamp?.intValue)! > (message2.timestamp?.intValue)!
+                            })
+                        }
+                        
+                        // reload table
+                        DispatchQueue.global(qos: .userInteractive).async {
+                            DispatchQueue.main.async {
+                                self.tableView.reloadData()
+                            }
+                        }
                     }
-                }
-                
-                // reload table
-                DispatchQueue.global(qos: .userInteractive).async {
-                    DispatchQueue.main.async {
-                        self.tableView.reloadData()
-                    }
-                }
-            }
-        }, withCancel: nil)
+                }, withCancel: nil)
+            }, withCancel: nil)
+        }
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -119,6 +124,9 @@ class MessagesController: UITableViewController, UIGestureRecognizerDelegate {
     }
     
     func setupNavBarWithUser(user: User) {
+        self.messages.removeAll()
+        self.messagesDictionary.removeAll()
+        tableView.reloadData()
         
         // profile image view
         let profileImageView = UIImageView()
@@ -174,8 +182,8 @@ class MessagesController: UITableViewController, UIGestureRecognizerDelegate {
         
         let loginController = LoginController()
         loginController.messageController = self
-        loginController.messageController?.messages.removeAll()
-        loginController.messageController?.messagesDictionary.removeAll()
+        //loginController.messageController?.messages.removeAll()
+        //loginController.messageController?.messagesDictionary.removeAll()
         present(loginController, animated: true, completion: nil)
     }
     

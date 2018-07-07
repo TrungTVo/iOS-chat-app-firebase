@@ -13,8 +13,9 @@ class UserCell: UITableViewCell {
     
     var message: Message? {
         didSet {
-            if let toId = message?.toId {
-                Database.database().reference().child("users").child(toId).observeSingleEvent(of: .value) { (snapshot) in
+            
+            if let chatPartnerId = message?.chatPartnerId() {
+                Database.database().reference().child("users").child(chatPartnerId).observeSingleEvent(of: .value) { (snapshot) in
                     if let dictionary = snapshot.value as? [String : AnyObject] {
                         self.textLabel?.text = dictionary["name"] as? String
                         if let profileImageUrl = dictionary["profileImageUrl"] as? String {
@@ -50,7 +51,6 @@ class UserCell: UITableViewCell {
     
     let timeLabel: UILabel = {
         let timeLabel = UILabel()
-        //timeLabel.text = "06/28/18 12:52 AM"
         timeLabel.font = UIFont.systemFont(ofSize: 12, weight: .light)
         timeLabel.translatesAutoresizingMaskIntoConstraints = false
         return timeLabel

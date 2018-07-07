@@ -75,7 +75,7 @@ extension LoginController: UIImagePickerControllerDelegate, UINavigationControll
             
             // put user name onto nav bar
             self.messageController?.fetchUserAndSetupNavbarTitle()
-            self.messageController?.observeMessages()
+            self.messageController?.observeUserMessages()
         }
     }
     
@@ -146,7 +146,7 @@ extension LoginController: UIImagePickerControllerDelegate, UINavigationControll
             
             // put user name onto nav bar
             self.messageController?.fetchUserAndSetupNavbarTitle()
-            self.messageController?.observeMessages()
+            self.messageController?.observeUserMessages()
         }
         
     }

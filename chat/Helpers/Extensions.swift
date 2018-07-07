@@ -14,7 +14,7 @@ extension UIImageView {
         self.image = nil
         // check if profile image stored in cache
         if let cachedImage = imageCache.object(forKey: urlString as AnyObject) {
-            self.image = cachedImage as! UIImage
+            self.image = cachedImage as? UIImage
             return
         }
         // otherwise, fire off new download image
