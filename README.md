@@ -18,6 +18,10 @@ $ pod init
 Open your Podfile and add:
 ```
 $ pod 'Firebase/Core'
+$ pod 'Firebase/Core'
+$ pod 'Firebase/Database'
+$ pod 'Firebase/Auth'
+$ pod 'Firebase/Storage'
 ```
 Save the file and run:
 ```
