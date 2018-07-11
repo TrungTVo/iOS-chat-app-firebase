@@ -50,10 +50,16 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        collectionView?.contentInset = UIEdgeInsets(top: 8, left: 0, bottom: 58, right: 0)
+        collectionView?.scrollIndicatorInsets = UIEdgeInsets(top: 0, left: 0, bottom: 50, right: 0)
+        collectionView?.alwaysBounceVertical = true
         collectionView?.backgroundColor = UIColor.white
         collectionView?.register(ChatMessageCell.self, forCellWithReuseIdentifier: "cellId")
         setupInputComponents()
+    }
+    
+    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+        collectionView?.collectionViewLayout.invalidateLayout()
     }
     
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
@@ -65,17 +71,31 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
         cell.backgroundColor = UIColor.white
         let message = messages[indexPath.item]
         cell.textView.text = message.text
+        cell.bubbleWidthAnchor?.constant = estimateFrameForText(text: message.text!).width + 30
         return cell
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: view.frame.width, height: 80)
+        var height: CGFloat = 80
+        let message = self.messages[indexPath.item]
+        if let messageText = message.text {
+            height = estimateFrameForText(text: messageText).height + 20
+        }
+        
+        return CGSize(width: view.frame.width, height: height)
+    }
+    
+    func estimateFrameForText(text: String) -> CGRect {
+        let cgSize = CGSize(width: 200, height: 1000)
+        let options = NSStringDrawingOptions.usesFontLeading.union(.usesLineFragmentOrigin)
+        return NSString(string: text).boundingRect(with: cgSize, options: options, attributes: [NSAttributedStringKey.font : UIFont.systemFont(ofSize: 16)], context: nil)
     }
     
     let sendButton: UIButton = {
         let button = UIButton(type: UIButtonType.system)
         button.setTitle("Send", for: UIControlState.normal)
         button.translatesAutoresizingMaskIntoConstraints = false
+        button.backgroundColor = UIColor.white
         button.addTarget(self, action: #selector(handleSend), for: UIControlEvents.touchDown)
         return button
     }()
@@ -84,6 +104,7 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
         let textfield = UITextField()
         textfield.placeholder = "Enter message"
         textfield.delegate = self
+        textfield.backgroundColor = UIColor.white
         textfield.translatesAutoresizingMaskIntoConstraints = false
         return textfield
     }()
