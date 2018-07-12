@@ -50,6 +50,7 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        view.backgroundColor = UIColor.white
         collectionView?.contentInset = UIEdgeInsets(top: 8, left: 0, bottom: 58, right: 0)
         collectionView?.scrollIndicatorInsets = UIEdgeInsets(top: 0, left: 0, bottom: 50, right: 0)
         collectionView?.alwaysBounceVertical = true
@@ -71,8 +72,44 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
         cell.backgroundColor = UIColor.white
         let message = messages[indexPath.item]
         cell.textView.text = message.text
+        setUpCell(cell: cell, message: message)
         cell.bubbleWidthAnchor?.constant = estimateFrameForText(text: message.text!).width + 30
         return cell
+    }
+    
+    private func setUpCell(cell: ChatMessageCell, message: Message) {
+        if message.fromId == Auth.auth().currentUser?.uid {
+            // blue bubble text
+            cell.bubbleView.backgroundColor = UIColor(r: 0, g: 137, b: 249)
+            cell.profileImageView.isHidden = true
+            cell.bubbleRightAnchor?.isActive = true
+        } else {
+            // grey bubble text
+            cell.bubbleView.backgroundColor = UIColor.lightGray
+            cell.bubbleLeftAnchor?.isActive = true
+            if let userId = message.fromId {
+                let userRef = Database.database().reference().child("users").child(userId)
+                userRef.observe(.value, with: { (snapshot) in
+                    if let dictionary = snapshot.value as? [String : AnyObject] {
+                        let profileImageUrl = dictionary["profileImageUrl"] as! String
+                        let url = URL(string: profileImageUrl)
+                        URLSession.shared.dataTask(with: url!, completionHandler: { (data, res, error) in
+                            if error != nil {
+                                print (error!)
+                                return
+                            }
+                            DispatchQueue.global(qos: .userInteractive).async {
+                                DispatchQueue.main.async {
+                                    if let downloadedImage = UIImage(data: data!) {
+                                        cell.profileImageView.image = downloadedImage
+                                    }
+                                }
+                            }
+                        }).resume()
+                    }
+                }, withCancel: nil)
+            }
+        }
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
@@ -162,9 +199,9 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
         separator.heightAnchor.constraint(equalToConstant: 1).isActive = true
         
         // ios 9 constraints
-        containerView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor).isActive = true
-        containerView.leftAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leftAnchor).isActive = true
-        containerView.widthAnchor.constraint(equalTo: view.safeAreaLayoutGuide.widthAnchor).isActive = true
+        containerView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
+        containerView.leftAnchor.constraint(equalTo: view.leftAnchor).isActive = true
+        containerView.widthAnchor.constraint(equalTo: view.widthAnchor).isActive = true
         containerView.heightAnchor.constraint(equalToConstant: 50).isActive = true
         
         // adding send button
