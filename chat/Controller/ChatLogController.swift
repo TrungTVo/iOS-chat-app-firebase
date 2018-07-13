@@ -78,37 +78,20 @@ class ChatLogController: UICollectionViewController, UITextFieldDelegate, UIColl
     }
     
     private func setUpCell(cell: ChatMessageCell, message: Message) {
+        if let profileImageUrl = self.user?.profileImageUrl {
+            cell.profileImageView.loadImageUsingCacheWithURL(urlString: profileImageUrl)
+        }
         if message.fromId == Auth.auth().currentUser?.uid {
             // blue bubble text
             cell.bubbleView.backgroundColor = UIColor(r: 0, g: 137, b: 249)
             cell.profileImageView.isHidden = true
             cell.bubbleRightAnchor?.isActive = true
+            cell.bubbleLeftAnchor?.isActive = false
         } else {
             // grey bubble text
             cell.bubbleView.backgroundColor = UIColor.lightGray
             cell.bubbleLeftAnchor?.isActive = true
-            if let userId = message.fromId {
-                let userRef = Database.database().reference().child("users").child(userId)
-                userRef.observe(.value, with: { (snapshot) in
-                    if let dictionary = snapshot.value as? [String : AnyObject] {
-                        let profileImageUrl = dictionary["profileImageUrl"] as! String
-                        let url = URL(string: profileImageUrl)
-                        URLSession.shared.dataTask(with: url!, completionHandler: { (data, res, error) in
-                            if error != nil {
-                                print (error!)
-                                return
-                            }
-                            DispatchQueue.global(qos: .userInteractive).async {
-                                DispatchQueue.main.async {
-                                    if let downloadedImage = UIImage(data: data!) {
-                                        cell.profileImageView.image = downloadedImage
-                                    }
-                                }
-                            }
-                        }).resume()
-                    }
-                }, withCancel: nil)
-            }
+            cell.bubbleRightAnchor?.isActive = false
         }
     }
     
