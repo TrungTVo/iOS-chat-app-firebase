@@ -1,4 +1,5 @@
 <img width="825" alt="screen shot 2018-07-17 at 12 10 35 pm" src="https://user-images.githubusercontent.com/20756728/42797700-8ddcbc50-89ba-11e8-8ad5-13153fddda88.png">
+
 ## Firebase setup guide
 Go to firebase.google.com and create a new project, choose getting started with iOS app.
 
